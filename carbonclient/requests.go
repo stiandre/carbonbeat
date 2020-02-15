@@ -3,6 +3,7 @@ package carbonclient
 import (
 	"encoding/json"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/elastic/beats/libbeat/logp"
@@ -22,7 +23,7 @@ func authenticatedGet(c *Client, e string) (*http.Response, error) {
 	if err != nil {
 		return &http.Response{}, err
 	}
-	req.Host = c.cfg.APIHost
+	req.Host = strings.Split(c.cfg.APIHost, "://")[1]
 	req.Header.Set("X-Auth-Token", c.cfg.APIKey+"/"+c.cfg.ConnectorID)
 	req.Header.Set("User-Agent", "Carbonbeat")
 	resp, err := c.httpClient.Do(req)
